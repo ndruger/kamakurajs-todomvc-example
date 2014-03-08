@@ -1,0 +1,25 @@
+{
+  "name": "kamakura",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "fibers": "~1.0.1",
+    "selenium-webdriver": "~2.40.0",
+    "grunt-contrib-coffee": "~0.10.1",
+    "coffee-script": "~1.7.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.2",
+    "express": "~3.4.8",
+    "mocha": "~1.17.1",
+    "chai": "~1.9.0"
+  },
+  "devDependencies": {
+  }
+}
