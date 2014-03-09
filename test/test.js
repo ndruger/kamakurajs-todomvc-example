@@ -4,6 +4,7 @@ kamakura = require("kamakurajs");
 address = require("./server")();
 
 var url = "http://" + address.address + ":" + address.port + '/architecture-examples/backbone/';
+//var url = "http://" + address.address + ":" + address.port + '/architecture-examples/angularjs/';
 
 assert = require("chai").assert;
 km = kamakura.create({
@@ -11,15 +12,22 @@ km = kamakura.create({
 });
 
 describe("ToDoMVC", function() {
-  this.timeout(100000);
+  this.timeout(10000);
 
   beforeEach(function(done){
     km.run(function() {
       km.goto(url);
       km.forceDisplayInlineBlockMode('.destroy');
+      removeAllItems();
       done();
     });
   });
+  
+  function removeAllItems() {
+    while (countItem()) {
+      removeItem();
+    }
+  }
   
   function countCompleted() {
     return km.findAll('.toggle:checked').getCount();
@@ -59,7 +67,7 @@ describe("ToDoMVC", function() {
     assert.equal(countCompleted(), completedCound + 1);
   }
   
-  function clearDone() {
+  function clearCompleted() {
     var count = countItem();
     var completedCound = countCompleted();
     km.find('#clear-completed').click();
@@ -86,7 +94,7 @@ describe("ToDoMVC", function() {
     km.run(function(next) {
       addItem();
       makeCompleted();
-      clearDone();
+      clearCompleted();
       done();
     });
   });
