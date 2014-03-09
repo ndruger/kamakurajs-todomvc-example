@@ -13,19 +13,81 @@ km = kamakura.create({
 describe("ToDoMVC", function() {
   this.timeout(100000);
 
-  describe("ToDoMVC", function() {
-    return it('should add todo', function(done) {
-      return km.run((function() {
-        return function(next) {
-          km.goto(url);
+  beforeEach(function(done){
+    km.run(function() {
+      km.goto(url);
+      km.forceDisplayInlineBlockMode('.destroy');
+      done();
+    });
+  });
+  
+  function countCompleted() {
+    return km.findAll('.toggle:checked').getCount();
+  }
+  
+  function countItem() {
+    return km.findAll('#todo-list li').getCount();
+  }
 
-          var text = "Create great test framework";
-          km.find("#new-todo").sendKeys(text + "\n");
-          km.find('#todo-list .view label').containsText(text);
-          km.find('#todo-count strong').containsText('1');
-          return done();
-        };
-      })(this));
+  function countItemByLabel() {
+    if (km.find("#footer").getCss('display') == 'none') {
+      return 0;
+    } else {
+      return parseInt(km.find('#todo-count strong').getText(), 10);
+    }
+  }
+  
+  function removeItem() {
+    var count = countItem();
+    km.find("button.destroy").click();
+    assert.equal(countItem(), count - 1);
+  }
+
+  function addItem() {
+    var text = "Create great test framework";
+    var count = countItem();
+    km.find("#new-todo").sendKeys(text + "\n");
+    km.find('#todo-list .view label').shouldContainText(text);
+    assert.equal(countItem(), count + 1);
+  }
+  
+  function makeCompleted() {
+    var count = countItemByLabel();
+    var completedCound = countCompleted();
+    km.find('.toggle').click();
+    assert.equal(countItemByLabel(), count - 1);
+    assert.equal(countCompleted(), completedCound + 1);
+  }
+  
+  function clearDone() {
+    var count = countItem();
+    var completedCound = countCompleted();
+    km.find('#clear-completed').click();
+    assert.equal(countItem(), count - completedCound);
+    assert.equal(countCompleted(), 0);
+  }
+  
+  it('should add item', function(done) {
+    km.run(function(next) {
+      addItem();
+      done();
+    });
+  });
+
+  it('should remove item', function(done) {
+    km.run(function(next) {
+      addItem();
+      removeItem();
+      done();
+    });
+  });
+
+  it('should make item completed', function(done) {
+    km.run(function(next) {
+      addItem();
+      makeCompleted();
+      clearDone();
+      done();
     });
   });
 });
