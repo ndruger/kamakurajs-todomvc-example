@@ -19,6 +19,7 @@ describe("ToDoMVC", function() {
       km.goto(url);
       km.forceDisplayInlineBlockMode('.destroy');
       removeAllItems();
+//      clickAllButton();
       done();
     });
   });
@@ -98,4 +99,48 @@ describe("ToDoMVC", function() {
       done();
     });
   });
+
+
+  function clickActiveButton() {
+    km.find('a[href="#/active"]').click();
+  }
+
+  function clickAllButton() {
+    km.find('a[href="#/"]').click();
+  }
+
+  function clickCompletedButton() {
+    km.find('a[href="#/completed"]').click();
+  }
+  
+  describe("Active/All button", function() {
+    it('should filter completed items', function(done) {
+      km.run(function(next) {
+        addItem();
+        addItem();
+        makeCompleted();
+        clickActiveButton();
+        km.find('.completed').css.should.have('display', 'none');
+        clickAllButton();
+        km.find('.completed').css.should.have('display', 'list-item');
+        done();
+      });
+    });
+  });
+
+  describe("Completed/All button", function() {
+    it('should filter active items', function(done) {
+      km.run(function(next) {
+        addItem();
+        addItem();
+        makeCompleted();
+        clickCompletedButton();
+        km.find('#todo-list > *:not(.completed)').css.should.have('display', 'none');
+        clickAllButton();
+        km.find('#todo-list > *:not(.completed)').css.should.have('display', 'list-item');
+        done();
+      });
+    });
+  });
+
 });
